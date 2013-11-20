@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Тестовая страничка</title>
+
+	<link href="css/styles.css" rel="stylesheet" />
+	<link href="js/validate/instant.validate.css" rel="stylesheet" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="js/validate/instant.validate.js"></script>
+</head>
+<body>
+	<h1>Тестовая формочка</h1>
+	<form id="test_form">
+		<table>
+			<tr>
+				<td>
+					<label for="email">E-Mail:</label><br/>
+					<input id="email" class="need-validation" type="text" name="email">
+				</td>
+				<td>
+					<label for="sum">Required sum:</label><br/>
+					<input id="sum" class="need-validation" type="text" name="sum">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="password">Password:</label><br/>
+					<input id="password" class="need-validation" type="password" name="password"></td>
+				<td>
+					<label for="confirm_password">Confirm password:</label><br/>
+					<input id="confirm_password" class="need-validation" type="password" name="confirm_password">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="text-align: center;">
+					<input id="submit-form" type="submit" disabled value="Send">
+				</td>
+			</tr>
+		</table>
+	</form>
+
+<script type="text/javascript">
+	var form = $('#test_form');
+	form.instantValidate({
+		config : {
+			email : {
+				notEmpty : { message : 'Поле не может быть пустым' },
+				length 	 : { min: 6, message : 'Минимальная длина поля - 6 символов' },
+				regex    : { pattern : '^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$', message : 'Неверный формат E-Mail'}
+			},
+			sum : {
+				notEmpty : { message : 'Поле не может быть пустым' },
+				compare  : { operator: '>=',etalon : 0.01, message : 'Минимальная сумма для перевода 0,01 USD' }
+			},
+			password : {
+				notEmpty : { message : 'Поле не может быть пустым' }
+			},
+			confirm_password : {
+				notEmpty : { message : 'Поле не может быть пустым' },
+				testFunction : function(fieldName, value, pluginConfig) {
+					return (value != $('[name="password"]').val()) ? 'Пароли не совпадают' : true;
+				}
+			}
+		},
+		onChange: function() {
+			form.instantValidate('validate');
+			if (form.instantValidate('isValid')) {
+				$('#submit-form').removeAttr('disabled');
+			} else {
+				$('#submit-form').attr('disabled', true);
+			}
+		}
+	});
+
+	/*$('.need-validation').keyup(function(){
+
+	});*/
+</script>
+</body>
+</html>
